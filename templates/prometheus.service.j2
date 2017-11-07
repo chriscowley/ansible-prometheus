@@ -10,8 +10,8 @@ Group=prometheus
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStart={{ prometheus_root_dir }}/prometheus \
   -config.file={{ prometheus_config_dir }}/prometheus.yml \
-  -storage.local.path={{ prometheus_db_dir }} \
-  -web.listen-address={{ prometheus_web_listen_address }} \
+  -storage.local.path={{ prometheus_db_dir }} {% if prometheus_storage_local_target_heap_size != "" %} -storage.local.target-heap-size {{ prometheus_storage_local_target_heap_size }} {% endif %} \
+  -web.listen-address={{ prometheus_web_listen_address }}  \
   -web.external-url={{ prometheus_web_external_url }}{% if prometheus_alertmanager_url != "" %}\
   -alertmanager.url={{ prometheus_alertmanager_url }}{% endif %}
 {#  {% for flag, flag_value in prometheus_config_flags_extra.iteritems() %}-{{ flag }}={{ flag_value }} {% endfor %} #}
