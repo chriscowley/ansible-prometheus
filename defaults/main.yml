@@ -1,11 +1,14 @@
 ---
-prometheus_version: 1.8.0
+prometheus_version: 1.8.2
 
 prometheus_config_dir: /etc/prometheus
 prometheus_db_dir: /var/lib/prometheus
 prometheus_root_dir: /opt/prometheus
 
 prometheus_interface: "{{ ansible_default_ipv4.interface }}"
+
+prometheus_arch: "amd64"
+prometheus_os: "linux"
 
 prometheus_web_listen_address: "0.0.0.0:9090"
 prometheus_web_external_url: 'http://localhost:9090'
