@@ -1,52 +1,45 @@
-#jinja2: trim_blocks: True, lstrip_blocks: True
-# http://prometheus.io/docs/operating/configuration/
 
 global:
   scrape_interval: {{ prometheus_global_scrape_interval }}
   scrape_timeout: {{ prometheus_global_scrape_timeout }}
   evaluation_interval: {{ prometheus_global_evaluation_interval }}
 
-{% if prometheus_external_labels != {} %}
-  # Attach these external labels to all timeseries collected by this Prometheus instance.
-  external_labels:
-  {% for k,v in prometheus_external_labels.iteritems()  %}
-    {{ k }}: "{{ v }}"
-  {% endfor %}
-{% endif %}
-
-{% if prometheus_rules_files != [] %}
-# Rule files specifies a list of files from which rules are read.
-rule_files:
-  {% for dest in prometheus_rules_files %}
-  - {{ prometheus_config_dir }}/rules/{{ dest }}
-  {% endfor %}
-{% endif %}
-
 scrape_configs:
-  - job_name: "prometheus"
-    scrape_interval: "5s"
-    scheme: http
-    metrics_path: {{ "/" + prometheus_web_external_url.split('/')[-1] }}/metrics
-    {#  metrics_path: /{{ prometheus_web_external_url.split('/')[3:]|join('/') }}metrics #}
-    static_configs:
-    - targets: ['localhost:9090']
+{{ prometheus_scrape_configs | to_nice_yaml(indent=2) }}
 
-  - job_name: "node"
-    scrape_interval: 30s
-    scrape_timeout: 10s
-    metrics_path: /metrics
-    file_sd_configs:
-    - files:
-      - {{ prometheus_config_dir }}/file_sd/*.yml
-      - {{ prometheus_config_dir }}/file_sd/*.yaml
-      - {{ prometheus_config_dir }}/file_sd/*.json
-
-{% if prometheus_targets_dns | length > 0 %}
-  - job_name: 'dns'
-    metrics_path: /metrics
-    dns_sd_configs:
-    - names:
-    {% for entry in prometheus_targets_dns %}
-      - {{ entry }}
-    {% endfor %}
-{% endif %}
+#{% if prometheus_rules_files != [] %}
+## Rule files specifies a list of files from which rules are read.
+#rule_files:
+#  {% for dest in prometheus_rules_files %}
+#  - {{ prometheus_config_dir }}/rules/{{ dest }}
+#  {% endfor %}
+#{% endif %}
+#
+#scrape_configs:
+#  - job_name: "prometheus"
+#    scrape_interval: "5s"
+#    scheme: http
+#    metrics_path: {{ "/" + prometheus_web_external_url.split('/')[-1] }}/metrics
+#    {#  metrics_path: /{{ prometheus_web_external_url.split('/')[3:]|join('/') }}metrics #}
+#    static_configs:
+#    - targets: ['localhost:9090']
+#
+#  - job_name: "node"
+#    scrape_interval: 30s
+#    scrape_timeout: 10s
+#    metrics_path: /metrics
+#    file_sd_configs:
+#    - files:
+#      - {{ prometheus_config_dir }}/file_sd/*.yml
+#      - {{ prometheus_config_dir }}/file_sd/*.yaml
+#      - {{ prometheus_config_dir }}/file_sd/*.json
+#
+#{% if prometheus_targets_dns | length > 0 %}
+#  - job_name: 'dns'
+#    metrics_path: /metrics
+#    dns_sd_configs:
+#    - names:
+#    {% for entry in prometheus_targets_dns %}
+#      - {{ entry }}
+#    {% endfor %}
+#{% endif %}

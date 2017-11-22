@@ -31,7 +31,7 @@
 - name: download prometheus binary to local folder
   become: no
   unarchive:
-    src: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}. {{ prometheus_os }}-{{ prometheus_arch }}.tar.gz"
+    src: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_os }}-{{ prometheus_arch }}.tar.gz"
     dest: "/tmp"
     remote_src: yes
     creates: "/tmp/prometheus-{{ prometheus_version }}.{{ prometheus_os }}-{{ prometheus_arch }}/prometheus"
